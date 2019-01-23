@@ -18,13 +18,11 @@ class App extends Component {
     this.setProcessor('bypass-processor', streamMic);
   }
   setup() {
-    const { state } = this;
     try {
       navigator.getUserMedia = navigator.getUserMedia ||
         navigator.webkitGetUserMedia ||
         navigator.mozGetUserMedia ||
         navigator.msGetUserMedia;
-      console.log("OK")
     } catch (e) {
       console.log("getUserMedia() is not supported in your browser");
     }
@@ -62,9 +60,11 @@ class App extends Component {
       cancelAnimationFrame(this.analyzerLoop);
     } else {
       const nodes = state.processor.cb(this);
-      this.setState({ audio: nodes.audio, 
-        analyser: nodes.analyser, 
-        streamData: nodes.streamData }, () => this.getStreamData());
+      this.setState({
+        audio: nodes.audio,
+        analyser: nodes.analyser,
+        streamData: nodes.streamData
+      }, () => this.getStreamData());
       nodes.audio.port.postMessage(true);
     }
     this.setState({ isPlaying: !state.isPlaying });
@@ -72,7 +72,7 @@ class App extends Component {
   getStreamData() {
     const { state } = this;
     this.analyzerLoop = requestAnimationFrame(this.getStreamData);
-    state.analyser.getByteTimeDomainData(state.streamData);
+    state.analyser.getByteFrequencyData(state.streamData);
     console.log(state.streamData)
   }
   render() {

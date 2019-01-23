@@ -1,24 +1,94 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { streamMic } from './Mic';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isPlaying: false, /* Is audio currently playing? (Boolean) */
+      processor: null, /* Object containing processor name, callback, and menu item name */
+      node: null, /* Current AudioWorkletNode (AudioWorkletNode)*/
+      moduleLoaded: false, /* Has the selected AudioWorkletProcessor finished loading? (Boolean)*/
+      status: null /* Load status message (String) */
+    }
+    this.getStreamData = this.getStreamData.bind(this);
+  }
+  componentDidMount() {
+    this.setProcessor('bypass-processor', streamMic);
+  }
+  setup() {
+    const { state } = this;
+    try {
+      navigator.getUserMedia = navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
+      console.log("OK")
+    } catch (e) {
+      console.log("getUserMedia() is not supported in your browser");
+    }
+    if (!this.actx) {
+      try {
+        console.log('New context instantiated')
+        this.actx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) {
+        console.log(`Sorry, but your browser doesn't support the Web Audio API!`, e);
+      }
+    }
+  }
+  async loadModule() {
+    const { state, actx } = this;
+    try {
+      await actx.audioWorklet.addModule(`worklet/${state.processor.module}.js`);
+      this.setState({ moduleLoaded: true, status: null })
+      console.log(`loaded module ${state.processor.module}`);
+    } catch (e) {
+      this.setState({ moduleLoaded: false })
+      console.log(`Failed to load module ${state.processor.module}`);
+    }
+  }
+  setProcessor(name, cb) {
+    if (this.state.isPlaying) return;
+    this.setState({ processor: { module: name, cb }, moduleLoaded: false, status: 'Loading module, please wait...' }, () => {
+      if (!this.actx) this.setup();
+      this.loadModule();
+    });
+  }
+  toggleNode() {
+    const { state } = this;
+    if (state.isPlaying) {
+      state.audio.port.postMessage(false);
+      cancelAnimationFrame(this.analyzerLoop);
+    } else {
+      const nodes = state.processor.cb(this);
+      this.setState({ audio: nodes.audio, 
+        analyser: nodes.analyser, 
+        streamData: nodes.streamData }, () => this.getStreamData());
+      nodes.audio.port.postMessage(true);
+    }
+    this.setState({ isPlaying: !state.isPlaying });
+  }
+  getStreamData() {
+    const { state } = this;
+    this.analyzerLoop = requestAnimationFrame(this.getStreamData);
+    state.analyser.getByteTimeDomainData(state.streamData);
+    console.log(state.streamData)
+  }
   render() {
+    const { state } = this;
+    const ActivateMic = (props) => {
+      const { processor } = props;
+      return (
+        <div>
+          <button onClick={() => state.processor ? this.toggleNode() : null}>Activate Mic</button>
+        </div>
+      )
+    };
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <ActivateMic />
         </header>
       </div>
     );

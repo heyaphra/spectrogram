@@ -24,7 +24,7 @@ export default class Spectrogram extends Component {
         let sliceData = slice.data;
             for (let i = 0; i < sliceData.length; i += 4) {
                 if(props.data){
-                    sliceData[i] +=  2 * props.data[i];   
+                    sliceData[i] +=  2 *  props.data[i];   
                     sliceData[i + 1] += 2 * props.data[i + 1]; 
                     sliceData[i + 2] += 2 * props.data[i + 2]; 
                 } else {
@@ -33,7 +33,6 @@ export default class Spectrogram extends Component {
                     sliceData[i + 2] = 0;
                 }
             }
-
         ctx.putImageData(slice, x, 0);
     }
     render() {
@@ -41,9 +40,11 @@ export default class Spectrogram extends Component {
             <div>
                 <canvas 
                 ref='canvas' 
-                width={window.innerWidth - 50}
-                height='500' 
-                style={{ border: '1px solid', marginTop: '2%', transform: 'rotate(180deg) scaleX(-1)'}}></canvas>
+                width={700}
+                height={350}
+                style={{ border: '1px solid', marginTop: '2%', 
+                // transform: 'rotate(180deg) scaleX(-1)'
+                }}></canvas>
             </div>
         )
     }

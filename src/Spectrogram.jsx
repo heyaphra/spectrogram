@@ -43,7 +43,7 @@ export default class Spectrogram extends Component {
                 width={700}
                 height={350}
                 style={{ border: '1px solid', marginTop: '2%', 
-                // transform: 'rotate(180deg) scaleX(-1)'
+                transform: 'rotate(180deg) scaleX(-1)'
                 }}></canvas>
             </div>
         )

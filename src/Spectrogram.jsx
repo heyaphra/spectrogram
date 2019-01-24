@@ -36,8 +36,6 @@ export default class Spectrogram extends Component {
         ctx.putImageData(slice, x, 0);
     }
     render() {
-        const { props } = this;
-        if (props.data) console.log(props.data);
         return (
             <div>
                 <canvas 

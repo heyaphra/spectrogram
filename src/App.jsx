@@ -81,7 +81,10 @@ class App extends Component {
     const ActivateMic = (props) => {
       return (
         <div style={{color: 'black'}}>
-          <button onClick={() => state.processor ? this.toggleNode() : null}>Activate Mic</button>
+          <button
+          disabled={!state.moduleLoaded}
+           onClick={() => state.processor ? this.toggleNode() : null}
+           >Toggle Mic</button>
         </div>
       )
     };

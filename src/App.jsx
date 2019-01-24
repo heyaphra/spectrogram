@@ -50,11 +50,12 @@ class App extends Component {
   setProcessor(name, cb) {
     if (this.state.isPlaying) return;
     this.setState({ processor: { module: name, cb }, moduleLoaded: false, status: 'Loading module, please wait...' }, () => {
+      if (!this.actx) this.setup();
       this.loadModule();
     });
   }
   toggleNode() {
-    if (!this.actx) this.setup();
+    this.actx.resume();
     const { state } = this;
     if (state.isPlaying) {
       console.log('stopping')

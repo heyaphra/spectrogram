@@ -9,7 +9,7 @@ export default class Spectrogram extends Component {
         const { props } = this;
         this.canvas = this.refs.canvas;
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.fillStyle = 'black';
+        this.ctx.fillStyle = 'blue';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
         this.draw();
     }

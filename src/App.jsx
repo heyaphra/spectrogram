@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { streamMic } from './Mic';
+import Spectrogram from './Spectrogram';
 
 class App extends Component {
   constructor() {
@@ -10,7 +11,7 @@ class App extends Component {
       processor: null, /* Object containing processor name, callback, and menu item name */
       node: null, /* Current AudioWorkletNode (AudioWorkletNode)*/
       moduleLoaded: false, /* Has the selected AudioWorkletProcessor finished loading? (Boolean)*/
-      status: null /* Load status message (String) */
+      status: null, /* Load status message (String) */
     }
     this.getStreamData = this.getStreamData.bind(this);
   }
@@ -63,24 +64,23 @@ class App extends Component {
       this.setState({
         audio: nodes.audio,
         analyser: nodes.analyser,
-        streamData: nodes.streamData
+        streamData: nodes.streamData,
       }, () => this.getStreamData());
       nodes.audio.port.postMessage(true);
     }
     this.setState({ isPlaying: !state.isPlaying });
+   
   }
   getStreamData() {
     const { state } = this;
     this.analyzerLoop = requestAnimationFrame(this.getStreamData);
-    state.analyser.getByteFrequencyData(state.streamData);
-    console.log(state.streamData)
+    this.setState ({}, () => state.analyser.getByteFrequencyData(state.streamData) );
   }
   render() {
     const { state } = this;
     const ActivateMic = (props) => {
-      const { processor } = props;
       return (
-        <div>
+        <div style={{color: 'black'}}>
           <button onClick={() => state.processor ? this.toggleNode() : null}>Activate Mic</button>
         </div>
       )
@@ -89,6 +89,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <ActivateMic />
+          <Spectrogram data={this.state.streamData ? state.streamData : null} />
         </header>
       </div>
     );

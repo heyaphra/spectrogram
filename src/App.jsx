@@ -57,9 +57,12 @@ class App extends Component {
   toggleNode() {
     const { state } = this;
     if (state.isPlaying) {
+      console.log('stopping')
       state.audio.port.postMessage(false);
       cancelAnimationFrame(this.analyzerLoop);
+      this.setState({streamData : null})
     } else {
+      console.log('starting')
       const nodes = state.processor.cb(this);
       this.setState({
         audio: nodes.audio,
@@ -83,7 +86,7 @@ class App extends Component {
         <div style={{color: 'black'}}>
           <button
           disabled={!state.moduleLoaded}
-           onClick={() => state.processor ? this.toggleNode() : null}
+           onClick={() => this.toggleNode()}
            >Toggle Mic</button>
         </div>
       )

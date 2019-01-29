@@ -28,9 +28,9 @@ export default class Spectrogram extends Component {
         for (let i = 0; i < sliceData.length; i += 4) {
             if (props.streamData) {
                 // Main
-                sliceData[i] = streamData.freqData[i] 
-                sliceData[i + 1] = streamData.freqData[i + 1] 
-                sliceData[i + 2] = streamData.freqData[i + 2]
+                sliceData[i] = 1.25 * streamData.freqData[i] 
+                sliceData[i + 1] = 1.25 * streamData.freqData[i + 1] 
+                sliceData[i + 2] = 1.25 * streamData.freqData[i + 2]
                 
             } else {
                 // Standby

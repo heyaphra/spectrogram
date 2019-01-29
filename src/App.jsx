@@ -78,7 +78,11 @@ class App extends Component {
   getStreamData() {
     const { state } = this;
     this.analyzerLoop = requestAnimationFrame(this.getStreamData);
-    this.setState ({}, () => state.analyser.getByteFrequencyData(state.streamData) );
+    this.setState ({}, () => {
+      state.analyser.getByteFrequencyData(state.streamData.freqData);
+      state.analyser.getByteTimeDomainData(state.streamData.timeData);
+    });
+    // console.log(this.state)
   }
   render() {
     const { state } = this;
@@ -96,7 +100,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <ActivateMic />
-          <Spectrogram data={this.state.streamData ? state.streamData : null} />
+          <Spectrogram streamData={this.state.streamData ? state.streamData : null} />
         </header>
       </div>
     );

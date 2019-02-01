@@ -2,9 +2,10 @@ export const streamMic = (App) => {
   const { actx } = App;
   const bypasserNode = new AudioWorkletNode(actx, 'bypass-processor');
   const analyser = actx.createAnalyser();
+  // Move analyser params to App state
   analyser.fftSize = 4096;
-  analyser.minDecibels = -90;
-  analyser.maxDecibels = -10;
+  analyser.minDecibels = -120;
+  analyser.maxDecibels = -15;
   //Also get time data
   const timeData = new Uint8Array(analyser.fftSize);
   const freqData = new Uint8Array(analyser.frequencyBinCount);

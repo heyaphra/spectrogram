@@ -11,13 +11,12 @@ export default class Spectrogram extends Component {
         this.ctx = this.canvas.getContext('2d');
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, 2000)
-        
         this.draw();
     }
     draw(x = 0, y = 0) {
         const { ctx, canvas, props } = this;
         const { streamData } = props;
-        const PHI = (1 + Math.sqrt(5)) / 2;
+        // ctx.rotate(180 * (Math.PI / 180));
         requestAnimationFrame(() => {
             if (x > canvas.width) x = 0;
             x += 1;
@@ -39,7 +38,6 @@ export default class Spectrogram extends Component {
                 sliceData[i + 2] = 0;
             }
         }
-        ctx.rotate((Math.PI * PHI) * .5);
         ctx.putImageData(slice, x, y);
     }
     render() {
@@ -47,7 +45,7 @@ export default class Spectrogram extends Component {
             <div>
                 <canvas
                     ref='canvas'
-                    width={window.innerWidth}
+                    width={window.innerWidth - 50}
                     height={480}
                     style={{
                         transform: 'rotate(180deg) scaleX(-1)'

@@ -3,12 +3,12 @@ import { Button, Tooltip } from 'antd';
 
 export const PlaybackCtrl = (props) => {
     return (
-        <Tooltip title={props.playing ? 'pause' : 'play'}>
+        <Tooltip title={props.isPlaying ? 'pause' : 'play'}>
             <Button
                 {...props}
                 size='small'
                 shape='circle'
-                icon={props.playing ? 'pause-circle' : 'play-circle'}
+                icon={props.isPlaying ? 'pause-circle' : 'play-circle'}
                 onClick={props.handlePlayback}
             />
         </Tooltip>

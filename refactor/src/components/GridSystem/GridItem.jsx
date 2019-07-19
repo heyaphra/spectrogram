@@ -7,7 +7,6 @@ export const GridItem = (props) => {
         ...props.colStart ? { gridColumnStart: props.colStart } : { gridColumnStart: 1 },
         ...props.colEnd ? { gridColumnEnd: props.colEnd + 1 } : { gridColumnEnd: props.cols },
     }
-    console.log('Col config: ', GridItemStyles)
     return (
         <div style={GridItemStyles}>
             {props.children}

@@ -1,31 +1,45 @@
 import React, { Component } from 'react';
 import { Spectrogram, FileList, GridSystem } from './components';
+import { AudioStream as Streamer } from './AudioStream';
+const AudioStream = new Streamer();
 const { Grid, GridItem } = GridSystem;
 class App extends Component {
   constructor() {
     super();
     this.state = {
       files: [],
-      playing: false
+      isPlaying: false
     }
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
     this.handlePlayback = this.handlePlayback.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
   onUploadSuccess(file) {
-    this.setState({ files: this.state.files.concat(file) }, () => console.log(this.state.files));
+    this.setState({ 
+      files: this.state.files.concat({ ...file, index: this.state.files.length }) 
+    }, () => AudioStream.fromElement(file.el));
   }
   handlePlayback() {
-    this.setState({ playing: !this.state.playing });
+    const { isPlaying } = this.state;
+    this.setState({ isPlaying: !this.state.isPlaying }, () => {
+      if(isPlaying) {
+        AudioStream.stop(this.state.selectedFile.el);
+      } else {
+        AudioStream.play(this.state.selectedFile.el);        
+      }
+    });
   }
   handleSelect(file) {
-    this.setState({ selectedFile: file.name }, () => console.log(this.state));
+    this.setState({ selectedFile: file });
   }
   render() {
     return (
       <Grid cols={8} rows={2} style={{ width: '100vw', height: '100vh' }}>
         <GridItem>
-          <Spectrogram style={{ height: '100%' }} />
+          <Spectrogram
+            // exportImage={this.exportImage}
+            style={{ height: '100%' }}
+          />
         </GridItem>
         <GridItem>
           <FileList
@@ -34,26 +48,11 @@ class App extends Component {
             onUploadSuccess={this.onUploadSuccess}
             handlePlayback={this.handlePlayback}
             handleSelect={this.handleSelect}
-            isPlaying={this.state.playing}
-            selected={this.state.selected}
+            isPlaying={this.state.isPlaying}
             dataSource={this.state.files}
           />
         </GridItem>
       </Grid>
-      // <div style={{ padding: '1% 2%', backgroundColor: '#f5f5f5', height: '100vh' }}>
-      //   <Spectrogram style={SpectrogramStyles} />
-      //   <div style={{ backgroundColor: 'white', width: '95vw', margin: '0 auto' }}>
-      // <FileList
-      //   selectedFile={this.state.selectedFile}
-      //   onUploadSuccess={this.onUploadSuccess}
-      //   handlePlayback={this.handlePlayback}
-      //   handleSelect={this.handleSelect}
-      //   isPlaying={this.state.playing}
-      //   selected={this.state.selected}
-      //   dataSource={this.state.files}
-      // />
-      //   </div>
-      // </div>
     );
   }
 }

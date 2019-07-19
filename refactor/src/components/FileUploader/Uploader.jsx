@@ -13,15 +13,16 @@ class Uploader extends Component {
   handleUpload = () => {
     const { props, reader } = this;
     this.setState({ loading: true });
-    const preview = new Audio();
+    const el = new Audio();
     const file = this.el.files[0];
     if (file) {
       reader.readAsDataURL(file);
     } else {
-      preview.src = "";
+      el.src = "";
     }
     reader.onloadend = () => {
-      props.onUploadSuccess({ name: file.name, src: reader.result });
+      el.src = reader.result;
+      props.onUploadSuccess({ name: file.name, el });
       this.setState({ loading: false });
     }
   }

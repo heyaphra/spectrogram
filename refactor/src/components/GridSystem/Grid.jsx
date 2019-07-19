@@ -10,7 +10,6 @@ export const Grid = (props) => {
         // gridColumnGap: props.gridColGap,
     }
     const { rows, cols } = props;
-    console.log('Grid config: ', GridStyles);
     return (
         <div className='grid' style={GridStyles}>
             {

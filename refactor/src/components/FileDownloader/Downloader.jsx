@@ -1,13 +1,15 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 
 export const Downloader = (props) => {
     return (
-        <Button 
-            {...props}
-            size='small'
-            shape='circle'
-            icon='download'  
-        />
+        <Tooltip title='download image' size='small'>
+            <Button
+                {...props}
+                size='small'
+                shape='circle'
+                icon='download'
+            />
+        </Tooltip>
     )
 }

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 
 class Uploader extends Component {
   constructor() {
@@ -29,13 +29,15 @@ class Uploader extends Component {
     const { props, state } = this;
     return (
       <React.Fragment>
-        <Button
-          size='small'
-          shape='circle'
-          icon='upload'
-          loading={state.loading}
-          onClick={() => this.el.click()}
-        />
+        <Tooltip title='upload audio' size='small'>
+          <Button
+            size='small'
+            shape='circle'
+            icon='upload'
+            loading={state.loading}
+            onClick={() => this.el.click()}
+          />
+        </Tooltip>
         <input
           accept='audio/*'
           ref={el => this.el = el} type="file" style={{ display: 'none' }}

@@ -1,14 +1,16 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 
 export const PlaybackCtrl = (props) => {
     return (
-        <Button
-            {...props}
-            size='small'
-            shape='circle'
-            icon={props.playing ? 'pause-circle' : 'play-circle'}
-            onClick={props.handlePlayback}
-        />
+        <Tooltip title={props.playing ? 'pause' : 'play'} size='small'>
+            <Button
+                {...props}
+                size='small'
+                shape='circle'
+                icon={props.playing ? 'pause-circle' : 'play-circle'}
+                onClick={props.handlePlayback}
+            />
+        </Tooltip>
     )
 }

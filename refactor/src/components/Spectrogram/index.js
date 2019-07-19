@@ -1,0 +1,1 @@
+export { Spectrogram } from './element';

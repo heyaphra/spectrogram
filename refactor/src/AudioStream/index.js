@@ -13,9 +13,16 @@ class AudioStream {
         this.checkContext();
         const { actx } = this;
         try {
-            this.stream = actx.createMediaElementSource(el);
-            this.stream.connect(actx.destination);
-            console.log('Success! ', this.stream);
+            this.analyser = actx.createAnalyser();
+            this.source = actx.createMediaElementSource(el);
+            this.analyser.connect(actx.destination);
+            this.source.connect(this.analyser);
+
+            this.analyser.fftSize = 16384;
+            this.bufferLength = this.analyser.frequencyBinCount;
+            this.dataArray = new Uint8Array(this.bufferLength);
+
+            console.log('Success!', this.dataArray);
         } catch (e) {
             console.log('Failed to make stream: ', e);
         }

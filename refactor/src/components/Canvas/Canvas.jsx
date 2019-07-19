@@ -10,7 +10,7 @@ class ResponsiveCanvas extends Component {
         };
     }
     componentDidMount() {
-        this.setState( { ...this.setSize() }, () => {
+        this.setState({ ...this.setSize() }, () => {
             window.addEventListener('resize', this.handleResize, false);
             this.ctx = this.canvas.getContext('2d');
             const { ctx, canvas } = this;
@@ -22,13 +22,14 @@ class ResponsiveCanvas extends Component {
         window.removeEventListener('resize', this.handleResize, false);
     }
     handleResize = () => {
+        const { ctx, canvas } = this;
         const { width, height } = this.state;
         this.setState({ ...this.setSize() }, () => {
-            this.props.canvasApp.setSize(width, height);
+            this.props.canvasApp.setSize(width, height)
             // Add custom events with this.props.onResize();
         });
     }
-    setSize = () =>  {
+    setSize = () => {
         const parent = this.canvas.parentElement;
         if (!parent) return;
         const [width, height] = getSize(parent);
@@ -39,33 +40,32 @@ class ResponsiveCanvas extends Component {
         const { createRef } = this.props;
         this.canvas = el;
         if (typeof canvasRef === 'function') {
-          createRef(el);
+            createRef(el);
         }
     };
     render() {
         const scale = window.devicePixelRatio || 1;
         const { width, height } = this.state;
         return (
-            <canvas 
-                ref={this.setRef} 
+            <canvas
+                ref={this.setRef}
                 width={width * scale}
                 height={height * scale}
-                style={{ width, height, ...this.props.style }} 
+                style={{ width, height, ...this.props.style }}
             />
         )
     }
 }
 
 const Canvas = (props) => {
-      return (
-        <div style={{ ...props.style }}>
-          <ResponsiveCanvas
+    return (
+        <ResponsiveCanvas
+            style={{ ...props.style }}
             canvasRef={el => { this.canvas = el }}
             canvasApp={props.canvasApp}
-          />
-        </div>
-      )
-    }
+        />
+    )
+}
 
 
 export { Canvas };

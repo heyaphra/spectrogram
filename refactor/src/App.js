@@ -29,16 +29,18 @@ class App extends Component {
       }
     });
   }
+  getStreamData() {
+    
+  }
   handleSelect(file) {
     this.setState({ selectedFile: file });
   }
   render() {
     return (
-      <Grid cols={8} rows={2} style={{ width: '100vw', height: '100vh' }}>
-        <GridItem>
+      <Grid cols={8} rows={2}>
+        <GridItem style={{ height:'50vh' }}>
           <Spectrogram
             // exportImage={this.exportImage}
-            style={{ height: '100%' }}
           />
         </GridItem>
         <GridItem>

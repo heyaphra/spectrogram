@@ -5,10 +5,14 @@ import { Button } from 'antd';
 class Uploader extends Component {
   constructor() {
     super();
+    this.state = {
+      loading: false
+    }
     this.reader = new FileReader();
   }
   handleUpload = () => {
     const { state, reader } = this;
+    this.setState({ loading: true });
     const preview = new Audio();
     const file = this.el.files[0];
     if (file) {
@@ -18,16 +22,18 @@ class Uploader extends Component {
     }
     reader.onloadend = () => {
       this.props.onUploadSuccess({ name: file.name, src: reader.result });
+      this.setState({ loading: false });
     }
   }
   render() {
-    const { props } = this;
+    const { props, state } = this;
     return (
       <React.Fragment>
         <Button
           size='small'
           shape='circle'
           icon='upload'
+          loading={state.loading}
           onClick={() => this.el.click()}
         />
         <input

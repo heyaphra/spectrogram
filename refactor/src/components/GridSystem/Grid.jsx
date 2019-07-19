@@ -1,0 +1,21 @@
+import React from 'react';
+
+export const Grid = (props) => {
+    const GridStyles = {
+        display: 'grid',
+        gridTemplateColumns: `repeat(${props.cols}, 1fr)`,
+        gridTemplateRows: `repeat(${props.rows}, 1fr)`,
+        ...props.style,
+        // gridRowGap: props.gridRowGap,
+        // gridColumnGap: props.gridColGap,
+    }
+    const { rows, cols } = props;
+    console.log('Grid config: ', GridStyles);
+    return (
+        <div className='grid' style={GridStyles}>
+            {
+                React.Children.map(props.children, (row, id) => React.cloneElement(row, { id: id + 1, rows: rows + 1, cols: cols + 1 }))
+            }
+        </div>
+    );
+}

@@ -3,7 +3,7 @@ import { Button, Tooltip } from 'antd';
 
 export const PlaybackCtrl = (props) => {
     return (
-        <Tooltip title={props.playing ? 'pause' : 'play'} size='small'>
+        <Tooltip title={props.playing ? 'pause' : 'play'}>
             <Button
                 {...props}
                 size='small'

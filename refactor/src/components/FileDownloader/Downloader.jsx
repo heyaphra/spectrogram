@@ -3,7 +3,7 @@ import { Button, Tooltip } from 'antd';
 
 export const Downloader = (props) => {
     return (
-        <Tooltip title='download image' size='small'>
+        <Tooltip title='download image'>
             <Button
                 {...props}
                 size='small'

@@ -11,7 +11,7 @@ class Uploader extends Component {
     this.reader = new FileReader();
   }
   handleUpload = () => {
-    const { state, reader } = this;
+    const { props, reader } = this;
     this.setState({ loading: true });
     const preview = new Audio();
     const file = this.el.files[0];
@@ -21,15 +21,15 @@ class Uploader extends Component {
       preview.src = "";
     }
     reader.onloadend = () => {
-      this.props.onUploadSuccess({ name: file.name, src: reader.result });
+      props.onUploadSuccess({ name: file.name, src: reader.result });
       this.setState({ loading: false });
     }
   }
   render() {
-    const { props, state } = this;
+    const { state } = this;
     return (
       <React.Fragment>
-        <Tooltip title='upload audio' size='small'>
+        <Tooltip title='upload audio'>
           <Button
             size='small'
             shape='circle'

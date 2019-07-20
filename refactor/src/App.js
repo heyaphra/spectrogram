@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Spectrogram, FileList, GridSystem } from './components';
 import { AudioStream as Streamer } from './AudioStream';
-const AudioStream = new Streamer();
 const { Grid, GridItem } = GridSystem;
 class App extends Component {
   constructor() {
@@ -13,34 +12,52 @@ class App extends Component {
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
     this.handlePlayback = this.handlePlayback.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleStreamData = this.handleStreamData.bind(this);
   }
   onUploadSuccess(file) {
-    this.setState({ 
-      files: this.state.files.concat({ ...file, index: this.state.files.length }) 
-    }, () => AudioStream.fromElement(file.el));
-  }
-  handlePlayback() {
-    const { isPlaying } = this.state;
-    this.setState({ isPlaying: !this.state.isPlaying }, () => {
-      if(isPlaying) {
-        AudioStream.stop(this.state.selectedFile.el);
+    this.setState({
+      files: this.state.files.concat({ ...file, index: this.state.files.length }),
+      selectedFile: this.state.selectedFile ? this.state.selectedFile : file
+    }, () => {
+      if (this.AudioStream) {
+        this.AudioStream.stop(this.state.selectedFile.el);
+        this.setState({ isPlaying: false });
       } else {
-        AudioStream.play(this.state.selectedFile.el);        
+        this.AudioStream = new Streamer();
+        this.AudioStream.fromElement(this.state.selectedFile.el);
       }
     });
   }
-  getStreamData() {
-    
+  handlePlayback() {
+    const { AudioStream } = this;
+    const { isPlaying, selectedFile } = this.state;
+    this.setState({ isPlaying: !this.state.isPlaying }, () => {
+      if (isPlaying) {
+        AudioStream.stop(selectedFile.el);
+      } else {
+        AudioStream.play(selectedFile.el)
+      }
+    });
+  }
+  handleStreamData() {
+    this.setState({ streamData: this.AudioStream.getStreamData() });
+    this.analyserLoop = requestAnimationFrame(this.handleStreamData);
   }
   handleSelect(file) {
-    this.setState({ selectedFile: file });
+    if (this.state.selectedFile && this.state.selectedFile.name !== file.name) {
+      this.AudioStream.stop(this.state.selectedFile.el);
+      file.el.removeEventListener('pause', () => cancelAnimationFrame(this.analyserLoop))
+    }
+    this.setState({ selectedFile: file, isPlaying: false });
+    file.el.addEventListener('pause', () => cancelAnimationFrame(this.analyserLoop))
   }
   render() {
     return (
       <Grid cols={8} rows={2}>
-        <GridItem style={{ height:'50vh' }}>
+        <GridItem style={{ height: '50vh' }}>
           <Spectrogram
-            // exportImage={this.exportImage}
+          // AudioStream={this.state.AudioStream}
+          // exportImage={this.exportImage}
           />
         </GridItem>
         <GridItem>

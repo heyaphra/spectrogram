@@ -1,4 +1,9 @@
+
 class AudioStream {
+    constructor() {
+        this.play = this.play.bind(this);
+        this.getStreamData = this.getStreamData.bind(this)
+    }
     checkContext() {
         if (!this.actx) {
             try {
@@ -14,28 +19,42 @@ class AudioStream {
         const { actx } = this;
         try {
             this.analyser = actx.createAnalyser();
+            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
             this.source = actx.createMediaElementSource(el);
-            this.analyser.connect(actx.destination);
-            this.source.connect(this.analyser);
 
-            this.analyser.fftSize = 16384;
-            this.bufferLength = this.analyser.frequencyBinCount;
-            this.dataArray = new Uint8Array(this.bufferLength);
+            const { analyser, source } = this;
+            analyser.fftSize = 16384;
+            analyser.minDecibels = -120;
+            analyser.maxDecibels = -15;
 
-            console.log('Success!', this.dataArray);
+            analyser.connect(actx.destination);
+            source.connect(this.analyser);
+
+            return this.source;
         } catch (e) {
             console.log('Failed to make stream: ', e);
         }
     }
-    fromMic() {
-        this.checkContext();
-    }
     play(el) {
         el.play();
+        this.getStreamData();
+    }
+
+    async getStreamData() {
+        // this.analyserLoop = requestAnimationFrame(this.getStreamData);
+
+
+        // this.analyser.getByteFrequencyData(this.dataArray)
+        // return this.dataArray;
+        // this.setState ({}, () => {
+
+        // });
+        // console.log(this.state)
     }
     stop(el) {
         el.pause();
         el.currentTime = 0;
+        cancelAnimationFrame(this.analyserLoop);
     }
 }
 

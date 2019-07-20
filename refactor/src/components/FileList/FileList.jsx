@@ -1,6 +1,7 @@
 import React from 'react';
 import { Uploader, Downloader, PlaybackCtrl } from '../';
 import { List, Button, Icon } from 'antd';
+import { Spin } from 'antd';
 
 export const FileList = (props) => {
     const {
@@ -24,6 +25,7 @@ export const FileList = (props) => {
                             isPlaying={isPlaying}
                         />
                         <Downloader />
+                        { props.loading ? <Spin /> : null }
                     </div>
                     {selectedFile ? <div style={{ textAlign: 'center', marginTop: '2%' }}><Icon type='sound' /> {selectedFile.name}</div> : null}
                 </div>

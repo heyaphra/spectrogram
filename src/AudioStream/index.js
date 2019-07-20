@@ -1,5 +1,10 @@
+/* AUDIOSTREAM
+*  API for audio playback and analysis.
+*/
+
 class AudioStream {
     constructor() {
+        this.files = [];
         this.play = this.play.bind(this);
         this.getStreamData = this.getStreamData.bind(this)
     }
@@ -13,40 +18,35 @@ class AudioStream {
             }
         }
     }
-    fromElement(el) {
+    fromFile(file) {
         this.checkContext();
         const { actx } = this;
         try {
             this.analyser = actx.createAnalyser();
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-            this.source = actx.createMediaElementSource(el);
-
-            const { analyser, source } = this;
+            this.source = actx.createMediaElementSource(file.el);
+            const { analyser, source, dataArray } = this;
             analyser.fftSize = 16384;
             analyser.minDecibels = -120;
             analyser.maxDecibels = -15;
-
             analyser.connect(actx.destination);
             source.connect(this.analyser);
-
-            return this.source;
+            this.files.push({ file, analyser, source, dataArray })
         } catch (e) {
             console.log('Failed to make stream: ', e);
         }
     }
-    play(el) {
-        el.play();
-        this.getStreamData();
+    play(index) {
+        this.files[index].file.el.play();
+        this.getStreamData(index);
     }
-    getStreamData() {
-        this.analyserLoop = requestAnimationFrame(this.getStreamData);
-        this.analyser.getByteFrequencyData(this.dataArray)
-        return this.dataArray;
+    getStreamData(index) {
+        this.files[index].analyser.getByteFrequencyData(this.files[index].dataArray)
+        return this.files[index].dataArray
     }
-    stop(el) {
-        el.pause();
-        el.currentTime = 0;
-        cancelAnimationFrame(this.analyserLoop);
+    stop(index) {
+        this.files[index].file.el.pause();
+        this.files[index].file.el.currentTime = 0;
     }
 }
 

@@ -1,4 +1,3 @@
-
 class AudioStream {
     constructor() {
         this.play = this.play.bind(this);
@@ -39,17 +38,10 @@ class AudioStream {
         el.play();
         this.getStreamData();
     }
-
-    async getStreamData() {
-        // this.analyserLoop = requestAnimationFrame(this.getStreamData);
-
-
-        // this.analyser.getByteFrequencyData(this.dataArray)
-        // return this.dataArray;
-        // this.setState ({}, () => {
-
-        // });
-        // console.log(this.state)
+    getStreamData() {
+        this.analyserLoop = requestAnimationFrame(this.getStreamData);
+        this.analyser.getByteFrequencyData(this.dataArray)
+        return this.dataArray;
     }
     stop(el) {
         el.pause();

@@ -1,9 +1,9 @@
-class Spectrogram {
-  constructor(AudioStream) {
-    if (AudioStream) {
-      this.AudioStream = AudioStream;
-      AudioStream.getStreamData();
-    }
+import React, { Component } from 'react';
+
+class Spectrogram extends Component {
+  constructor() {
+    super();
+    console.log(this)
   }
   init(ctx, canvas, width, height) {
     this.ctx = ctx;
@@ -24,7 +24,9 @@ class Spectrogram {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, this.canvas.width, 2000)
     ctx.fill();
-
+  }
+  render() {
+    return <span style={{ display: 'none' }}></span>
   }
 }
 

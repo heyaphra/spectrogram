@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Provider } from './context';
 import { Spectrogram, FileList, GridSystem } from './components';
 import { AudioStream as Streamer } from './AudioStream';
 const { Grid, GridItem } = GridSystem;
@@ -19,33 +20,37 @@ class App extends Component {
       files: this.state.files.concat({ ...file, index: this.state.files.length }),
       selectedFile: this.state.selectedFile ? this.state.selectedFile : file
     }, () => {
-      if (this.AudioStream) {
+      if (this.state.AudioStream && this.state.isPlaying) {
         this.AudioStream.stop(this.state.selectedFile.el);
         this.setState({ isPlaying: false });
       } else {
-        this.AudioStream = new Streamer();
-        this.AudioStream.fromElement(this.state.selectedFile.el);
+        const AudioStream = new Streamer();
+        this.setState({ AudioStream }, () => {
+          this.state.AudioStream.fromElement(file.el);
+        })
       }
     });
   }
   handlePlayback() {
-    const { AudioStream } = this;
+    const { AudioStream } = this.state;
     const { isPlaying, selectedFile } = this.state;
     this.setState({ isPlaying: !this.state.isPlaying }, () => {
       if (isPlaying) {
+        cancelAnimationFrame(this.analyserLoop);
         AudioStream.stop(selectedFile.el);
       } else {
+        this.handleStreamData();
         AudioStream.play(selectedFile.el)
       }
     });
   }
   handleStreamData() {
-    this.setState({ streamData: this.AudioStream.getStreamData() });
+    this.setState({ streamData: this.state.AudioStream.getStreamData() });
     this.analyserLoop = requestAnimationFrame(this.handleStreamData);
   }
   handleSelect(file) {
     if (this.state.selectedFile && this.state.selectedFile.name !== file.name) {
-      this.AudioStream.stop(this.state.selectedFile.el);
+      this.state.AudioStream.stop(this.state.selectedFile.el);
       file.el.removeEventListener('pause', () => cancelAnimationFrame(this.analyserLoop))
     }
     this.setState({ selectedFile: file, isPlaying: false });
@@ -55,10 +60,7 @@ class App extends Component {
     return (
       <Grid cols={8} rows={2}>
         <GridItem style={{ height: '50vh' }}>
-          <Spectrogram
-          // AudioStream={this.state.AudioStream}
-          // exportImage={this.exportImage}
-          />
+          <Spectrogram streamData={this.state.streamData} isPlaying={this.state.isPlaying} />
         </GridItem>
         <GridItem>
           <FileList

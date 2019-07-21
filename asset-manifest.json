@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.js": "/spectrogram/static/js/main.6ac5c385.chunk.js",
-    "main.js.map": "/spectrogram/static/js/main.6ac5c385.chunk.js.map",
+    "main.js": "/spectrogram/static/js/main.cec0ad36.chunk.js",
+    "main.js.map": "/spectrogram/static/js/main.cec0ad36.chunk.js.map",
     "runtime~main.js": "/spectrogram/static/js/runtime~main.7fcba02d.js",
     "runtime~main.js.map": "/spectrogram/static/js/runtime~main.7fcba02d.js.map",
     "static/css/2.d19c8617.chunk.css": "/spectrogram/static/css/2.d19c8617.chunk.css",
     "static/js/2.6f6daa23.chunk.js": "/spectrogram/static/js/2.6f6daa23.chunk.js",
     "static/js/2.6f6daa23.chunk.js.map": "/spectrogram/static/js/2.6f6daa23.chunk.js.map",
     "index.html": "/spectrogram/index.html",
-    "precache-manifest.6182f1fd6b40983c97d4a04f06272500.js": "/spectrogram/precache-manifest.6182f1fd6b40983c97d4a04f06272500.js",
+    "precache-manifest.0d2092a8eea1ef874396b75f58e05a5b.js": "/spectrogram/precache-manifest.0d2092a8eea1ef874396b75f58e05a5b.js",
     "service-worker.js": "/spectrogram/service-worker.js",
     "static/css/2.d19c8617.chunk.css.map": "/spectrogram/static/css/2.d19c8617.chunk.css.map"
   }

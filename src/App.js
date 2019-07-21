@@ -8,11 +8,11 @@ const { Grid, GridItem } = GridSystem;
 let data = [
   {
     name: 'Hidden transmission',
-    path: '/data/hidden_transmission.mp3',
+    path: `${process.env.PUBLIC_URL}/data/hidden_transmission.mp3`,
   },
   {
     name: 'Aphex twin song',
-    path: '/data/AphexTwin.mp3',
+    path: `${process.env.PUBLIC_URL}/data/AphexTwin.mp3`,
   }
 ];
 class App extends Component {

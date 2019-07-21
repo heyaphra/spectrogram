@@ -63,6 +63,7 @@ const Canvas = (props) => {
             style={{ ...props.style, }}
             canvasRef={el => { this.canvas = el }}
             canvasApp={props.canvasApp}
+            isPlaying={props.isPlaying}
         />
     )
 }

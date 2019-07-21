@@ -5,12 +5,22 @@ import React, { Component } from 'react';
 import { Spectrogram, FileList, GridSystem } from './components';
 import { AudioStream } from './AudioStream';
 const { Grid, GridItem } = GridSystem;
+let data = [
+  {
+    name: 'Hidden transmission',
+    path: '/data/hidden_transmission.mp3',
+  },
+  {
+    name: 'Aphex twin song',
+    path: '/data/AphexTwin.mp3',
+  }
+];
 class App extends Component {
   constructor() {
     super();
     this.state = {
       files: [],
-      isPlaying: false
+      isPlaying: false,
     }
     this.AudioStream = new AudioStream();
     this.play = this.play.bind(this);
@@ -19,12 +29,41 @@ class App extends Component {
     this.handlePlayback = this.handlePlayback.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleStreamData = this.handleStreamData.bind(this);
+    this.loadSamples = this.loadSamples.bind(this);
+  }
+  componentDidMount() {
+    this.loadSamples();
+  }
+  loadSamples() {
+    let files = data.map((file, i) => {
+      let audio = new Audio();
+      audio.src = file.path;
+      file.el = audio;
+      file.index = i;
+      this.AudioStream.fromFile(file);
+      return file;
+    });
+    this.setState({ files, selectedFile: files[0] });
   }
   onUploadSuccess(file) {
     let incoming = { ...file, index: this.state.files.length };
     let files = this.state.files.concat({ ...incoming });
     let selectedFile = this.state.selectedFile ? this.state.selectedFile : incoming;
-    this.setState({ files, selectedFile  }, () => this.AudioStream.fromFile(file));
+    this.setState({ files, selectedFile }, () => this.AudioStream.fromFile(file));
+  }
+  handleSelect(file) {
+    this.stop();
+    this.setState({ selectedFile: file, isPlaying: false });
+  }
+  handlePlayback() {
+    const { play, stop, state: { isPlaying } } = this;
+    this.setState({ isPlaying: !isPlaying }, () => {
+      if (isPlaying) {
+        stop();
+      } else {
+        play();
+      }
+    });
   }
   play() {
     const { AudioStream, handleStreamData, state: { selectedFile } } = this;
@@ -37,23 +76,10 @@ class App extends Component {
     AudioStream.stop(selectedFile.index);
     this.setState({ streamData: [] })
   }
-  handlePlayback() {
-    const { play, stop, state: { isPlaying } } = this;
-    this.setState({ isPlaying: !isPlaying }, () => {
-      if (isPlaying) {
-        stop();
-      } else {
-        play();
-      }
-    });
-  }
   handleStreamData(index) {
     const { AudioStream, handleStreamData } = this;
     this.setState({ streamData: AudioStream.getStreamData(index) });
     this.analyserLoop = requestAnimationFrame(() => handleStreamData(index));
-  }
-  handleSelect(file) {
-    this.setState({ selectedFile: file });
   }
   render() {
     return (

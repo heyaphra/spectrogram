@@ -25,7 +25,6 @@ export const FileList = (props) => {
                             isPlaying={isPlaying}
                         />
                         <Downloader />
-                        { props.loading ? <Spin /> : null }
                     </div>
                     {selectedFile ? <div style={{ textAlign: 'center', marginTop: '2%' }}><Icon type='sound' /> {selectedFile.name}</div> : null}
                 </div>

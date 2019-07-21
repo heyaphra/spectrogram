@@ -8,13 +8,6 @@ class Spectrogram extends Component {
     constructor() {
         super();
     }
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.streamData) {
-            return true;
-        } else {
-            return false;
-        }
-    }
     init(ctx, canvas, width, height) {
         this.ctx = ctx;
         this.canvas = canvas;
@@ -23,50 +16,20 @@ class Spectrogram extends Component {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.slice = this.ctx.getImageData(0, 0, 1, this.canvas.height);
-        this.draw();
+        this.draw()
     }
     setSize(width, height) {
         this.canvas.width = width;
         this.canvas.height = height;
         cancelAnimationFrame(this.animationLoop);
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);      
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.slice = this.ctx.getImageData(0, 0, 1, this.canvas.height);
-        this.draw(this.x, this.y);
-    }
-    scaleImageData(imageData, scale) {
-        var scaled = this.ctx.createImageData(imageData.width * scale, imageData.height * scale);
-        for (var row = 0; row < imageData.height; row++) {
-            for (var col = 0; col < imageData.width; col++) {
-                var sourcePixel = [
-                    imageData.data[(row * imageData.width + col) * 4 + 0],
-                    imageData.data[(row * imageData.width + col) * 4 + 1],
-                    imageData.data[(row * imageData.width + col) * 4 + 2],
-                    imageData.data[(row * imageData.width + col) * 4 + 3]
-                ];
-                for (var y = 0; y < scale; y++) {
-                    var destRow = row * scale + y;
-                    for (var x = 0; x < scale; x++) {
-                        var destCol = col * scale + x;
-                        for (var i = 0; i < 4; i++) {
-                            scaled.data[(destRow * scaled.width + destCol) * 4 + i] =
-                                sourcePixel[i];
-                        }
-                    }
-                }
-            }
-        }
-
-        return scaled;
+        this.draw();
     }
     draw(x = 0, y = 0) {
-        const { ctx, props, canvas, slice } = this;
-        const { width, height } = canvas;
-        const { streamData } = props;
+        const { slice, ctx, canvas: { width, height }, props: { streamData, isPlaying } } = this;
         this.animationLoop = requestAnimationFrame(() => {
             if (x > width) x = 0;
-            this.x = x;
-            this.y = y;
-            x = x + 1;
             this.draw(x, y);
         });
         let sliceData = slice.data;
@@ -84,11 +47,36 @@ class Spectrogram extends Component {
                 sliceData[i + 2] = 0;
             }
         }
-        ctx.putImageData(this.scaleImageData(slice, 2), x, y, 0, 0, canvas.width, canvas.height);
+        isPlaying ? x++ : x = 0;
+        ctx.putImageData(slice, x, y);
+    }
+    scaleImageData(imageData, scale) {
+        let scaled = this.ctx.createImageData(imageData.width * scale, imageData.height * scale);
+        for (let row = 0; row < imageData.height; row++) {
+            for (let col = 0; col < imageData.width; col++) {
+                let sourcePixel = [
+                    imageData.data[(row * imageData.width + col) * 4 + 0],
+                    imageData.data[(row * imageData.width + col) * 4 + 1],
+                    imageData.data[(row * imageData.width + col) * 4 + 2],
+                    imageData.data[(row * imageData.width + col) * 4 + 3]
+                ];
+                for (let y = 0; y < scale; y++) {
+                    let destRow = row * scale + y;
+                    for (let x = 0; x < scale; x++) {
+                        let destCol = col * scale + x;
+                        for (let i = 0; i < 4; i++) {
+                            scaled.data[(destRow * scaled.width + destCol) * 4 + i] =
+                                sourcePixel[i];
+                        }
+                    }
+                }
+            }
+        }
+        return scaled;
     }
     render() {
         return (
-            <Canvas style={{ transform: 'rotate(180deg) scaleX(-1)' }} canvasRef={el => { this.canvas = el }} canvasApp={this} />
+            <Canvas style={{ transform: 'rotate(180deg) scaleX(-1)' }} canvasRef={el => { this.canvas = el }} canvasApp={this} isPlaying={this.props.isPlaying} />
         )
     }
 }

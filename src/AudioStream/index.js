@@ -26,8 +26,8 @@ class AudioStream {
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
             this.source = actx.createMediaElementSource(file.el);
             const { analyser, source, dataArray } = this;
-            analyser.fftSize = 16384;
-            analyser.minDecibels = -120;
+            analyser.fftSize = 2048;
+            analyser.minDecibels = -110;
             analyser.maxDecibels = -15;
             analyser.connect(actx.destination);
             source.connect(this.analyser);
@@ -42,7 +42,7 @@ class AudioStream {
     }
     getStreamData(index) {
         this.files[index].analyser.getByteFrequencyData(this.files[index].dataArray)
-        return this.files[index].dataArray
+        return this.files[index].dataArray;
     }
     stop(index) {
         this.files[index].file.el.pause();

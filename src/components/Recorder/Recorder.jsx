@@ -11,7 +11,7 @@ class Recorder extends Component {
         const { props } = this;
         return (
             <React.Fragment>
-                <Tooltip title='connect mic'>
+                <Tooltip title={props.mic ? 'mute mic' : 'connect mic'}>
                     <Button
                         disabled={props.isPlaying}
                         style={{ display: 'flex', justifyContent: 'space-evenly', }}

@@ -6,6 +6,7 @@ export const Downloader = (props) => {
         <Tooltip title='download image'>
             <Button
                 {...props}
+                onClick={props.handleDownload}
                 size='small'
                 shape='circle'
                 icon='download'

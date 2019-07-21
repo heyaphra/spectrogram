@@ -6,8 +6,8 @@ export const Grid = (props) => {
         gridTemplateColumns: `repeat(${props.cols}, 1fr)`,
         gridTemplateRows: `repeat(${props.rows}, 1fr)`,
         ...props.style,
-        // gridRowGap: props.gridRowGap,
-        // gridColumnGap: props.gridColGap,
+        gridRowGap: 0,
+        gridColumnGap: 0,
     }
     const { rows, cols } = props;
     return (

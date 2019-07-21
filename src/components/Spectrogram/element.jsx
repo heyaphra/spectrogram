@@ -73,7 +73,7 @@ class Spectrogram extends Component {
     }
     render() {
         return (
-            <Canvas style={{ transform: 'rotate(180deg) scaleX(-1)' }} canvasRef={el => { this.canvas = el }} canvasApp={this} isPlaying={this.props.isPlaying} />
+            <Canvas style={{ transform: 'rotate(180deg) scaleX(-1)', ...this.props.style }} canvasRef={el => { this.canvas = el }} canvasApp={this} isPlaying={this.props.isPlaying} />
         )
     }
 }

@@ -2,18 +2,49 @@
 *  The main page.
 */
 import React, { Component } from 'react';
+import { Icon, Tooltip } from 'antd';
+import { MdEmail } from 'react-icons/md'
 import { Spectrogram, FileList, GridSystem } from './components';
 import { AudioStream } from './AudioStream';
 const { Grid, GridItem } = GridSystem;
 let data = [
   {
-    name: 'Hidden transmission',
+    name: 'Animation study',
+    author: {
+      name: 'Orsolya Kaufmann',
+      social: ''
+    },
+    source: 'https://www.youtube.com/watch?v=Hxx6Gqf1Q4w&feature=youtu.be',
+    path: `${process.env.PUBLIC_URL}/data/animations.mp3`,
+  },
+  {
+    name: 'Alien transmission',
+    author: {
+      name: 'Spectral Transmissions',
+      social: ''
+    },
+    source: 'https://youtu.be/FnzIpAAzP3w',
     path: `${process.env.PUBLIC_URL}/data/hidden_transmission.mp3`,
   },
   {
-    name: 'Aphex twin song',
-    path: `${process.env.PUBLIC_URL}/data/AphexTwin.mp3`,
-  }
+    name: 'rhodes_motif.wav',
+    author: {
+      name: 'natalie',
+      social: ''
+    },
+    source: 'https://youtu.be/FnzIpAAzP3w',
+    path: `${process.env.PUBLIC_URL}/data/rhodes_motif.wav`,
+  },
+  {
+    name: 'rediscovery.wav',
+    author: {
+      name: 'Spectral Transmissions',
+      social: 'natalie'
+    },
+    source: 'https://youtu.be/FnzIpAAzP3w',
+    path: `${process.env.PUBLIC_URL}/data/rediscovery.wav`,
+  },
+
 ];
 class App extends Component {
   constructor() {
@@ -32,9 +63,17 @@ class App extends Component {
     this.handleStreamData = this.handleStreamData.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
     this.handleCapture = this.handleCapture.bind(this);
+    this.handleDownload = this.handleDownload.bind(this);
   }
   componentDidMount() {
     this.loadSamples();
+  }
+  handleDownload() {
+    let canvas = document.getElementsByTagName('canvas')[0];
+    let link = document.createElement('a');
+    link.download = `spectrogram-${Date.now()}.png`;
+    link.href = canvas.toDataURL()
+    link.click();
   }
   loadSamples() {
     let files = data.map((file, i) => {
@@ -72,14 +111,13 @@ class App extends Component {
   }
   handleCapture() {
     this.setState({ mic: !this.state.mic }, () => {
-      if(!this.state.mic) {
+      if (!this.state.mic) {
         cancelAnimationFrame(this.analyserLoop)
         this.AudioStream.stopMic();
       } else {
         this.AudioStream.fromMic();
         this.handleStreamData('mic');
       }
-   
     });
   }
   play() {
@@ -101,11 +139,26 @@ class App extends Component {
   render() {
     return (
       <Grid cols={8} rows={3}>
-        <GridItem style={{ height: '170px' }}>
-          <Spectrogram streamData={this.state.streamData} isPlaying={this.state.isPlaying} mic={this.state.mic} />
+        <GridItem style={{ width: '95vw', margin: '0 auto', marginTop: '6vh', padding: '1% 1%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '10vw', margin: '0 auto' }}>
+            <Tooltip placement='bottom' title='instagram'>
+              <Icon type='instagram' onClick={() => window.open('https://instagram.com/bloom.510')} />
+            </Tooltip>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '1%' }}>
+            <p> Hello, world! I'm Natalie, and this is a spectrogram. </p>
+            <p>You can observe spectral content from audio files or your microphone.</p>
+            <p>If you think its really pretty, you have the option to download the canvas. </p>
+            <p>And you could also <a href='mailto:bloom510@protonmail.com' target='_blank'>say hi :-)</a></p>
+            <p>Ready? Scroll down!</p>
+          </div>
         </GridItem>
-        <GridItem rowStart={2}>
+        <GridItem style={{ backgroundColor: 'black' }}>
+          <Spectrogram style={{ height: '170px' }} streamData={this.state.streamData} isPlaying={this.state.isPlaying} mic={this.state.mic} />
+        </GridItem>
+        <GridItem>
           <FileList
+            handleDownload={this.handleDownload}
             mic={this.state.mic}
             selectedFile={this.state.selectedFile}
             onUploadSuccess={this.onUploadSuccess}
@@ -116,6 +169,7 @@ class App extends Component {
             dataSource={this.state.files}
           />
         </GridItem>
+
       </Grid>
     );
   }

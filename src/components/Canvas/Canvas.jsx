@@ -51,7 +51,7 @@ class ResponsiveCanvas extends Component {
                 ref={this.setRef}
                 width={width * scale}
                 height={height * scale}
-                style={{ width, height, ...this.props.style, border: '1px solid' }}
+                style={{ width, height, ...this.props.style,  }}
             />
         )
     }

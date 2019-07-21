@@ -1,8 +1,6 @@
 import React from 'react';
 import { Uploader, Downloader, PlaybackCtrl, Recorder } from '../';
 import { List, Button, Icon } from 'antd';
-import { Spin } from 'antd';
-
 export const FileList = (props) => {
     const {
         onUploadSuccess,
@@ -12,7 +10,8 @@ export const FileList = (props) => {
         isPlaying,
         selectedFile,
         dataSource,
-        mic
+        mic,
+        handleDownload
     } = props;
     return (
         <List
@@ -21,7 +20,7 @@ export const FileList = (props) => {
                 <div>
                     <div style={{ display: 'flex', justifyContent: 'space-evenly', }}>
                         <Uploader onUploadSuccess={onUploadSuccess} />
-                        <Downloader />
+                        <Downloader handleDownload={handleDownload} />
                         <PlaybackCtrl
                             disabled={!selectedFile || mic}
                             handlePlayback={handlePlayback}
@@ -39,11 +38,16 @@ export const FileList = (props) => {
                     <Button
                         disabled={mic}
                         block
-                        style={{ margin: '0 auto' }}
+                        // style={{ margin: '0 auto' }}
                         onClick={() => handleSelect(file)}>
                         <List.Item.Meta
                             avatar={<img width={25} height={25} src="https://www.svgrepo.com/show/8210/musical-notes.svg" />}
-                            title={file.name}
+                            title={
+                                <span>
+                                    <a href={file.source} target='_blank'>{file.name}</a> by {file.author.name}
+    
+                                </span>
+                            }
                         />
                     </Button>
                 </List.Item>

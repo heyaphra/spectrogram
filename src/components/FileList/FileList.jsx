@@ -1,5 +1,5 @@
 import React from 'react';
-import { Uploader, Downloader, PlaybackCtrl } from '../';
+import { Uploader, Downloader, PlaybackCtrl, Recorder } from '../';
 import { List, Button, Icon } from 'antd';
 import { Spin } from 'antd';
 
@@ -8,25 +8,28 @@ export const FileList = (props) => {
         onUploadSuccess,
         handleSelect,
         handlePlayback,
+        handleCapture,
         isPlaying,
         selectedFile,
-        dataSource
+        dataSource,
+        mic
     } = props;
     return (
         <List
             style={props.style}
             header={
                 <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-evenly', }}>
                         <Uploader onUploadSuccess={onUploadSuccess} />
+                        <Downloader />
                         <PlaybackCtrl
-                            disabled={!selectedFile}
+                            disabled={!selectedFile || mic}
                             handlePlayback={handlePlayback}
                             isPlaying={isPlaying}
                         />
-                        <Downloader />
+                        <Recorder mic={mic} isPlaying={isPlaying} handleCapture={handleCapture} />
+                        {selectedFile ? <span style={{ textAlign: 'center' }}><Icon type='sound' /> {mic ? 'Microphone' : selectedFile.name}</span> : null}
                     </div>
-                    {selectedFile ? <div style={{ textAlign: 'center', marginTop: '2%' }}><Icon type='sound' /> {selectedFile.name}</div> : null}
                 </div>
             }
             bordered
@@ -34,6 +37,7 @@ export const FileList = (props) => {
             renderItem={file => (
                 <List.Item>
                     <Button
+                        disabled={mic}
                         block
                         style={{ margin: '0 auto' }}
                         onClick={() => handleSelect(file)}>

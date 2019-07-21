@@ -19,6 +19,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      mic: false,
       files: [],
       isPlaying: false,
     }
@@ -30,6 +31,7 @@ class App extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleStreamData = this.handleStreamData.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
+    this.handleCapture = this.handleCapture.bind(this);
   }
   componentDidMount() {
     this.loadSamples();
@@ -49,10 +51,13 @@ class App extends Component {
     let incoming = { ...file, index: this.state.files.length };
     let files = this.state.files.concat({ ...incoming });
     let selectedFile = this.state.selectedFile ? this.state.selectedFile : incoming;
-    this.setState({ files, selectedFile }, () => this.AudioStream.fromFile(file));
+    this.setState({ files, selectedFile }, () => {
+      this.AudioStream.fromFile(file);
+      this.handleSelect(incoming);
+    });
   }
   handleSelect(file) {
-    this.stop();
+    if (this.state.isPlaying) this.stop();
     this.setState({ selectedFile: file, isPlaying: false });
   }
   handlePlayback() {
@@ -63,6 +68,18 @@ class App extends Component {
       } else {
         play();
       }
+    });
+  }
+  handleCapture() {
+    this.setState({ mic: !this.state.mic }, () => {
+      if(!this.state.mic) {
+        cancelAnimationFrame(this.analyserLoop)
+        this.AudioStream.stopMic();
+      } else {
+        this.AudioStream.fromMic();
+        this.handleStreamData('mic');
+      }
+   
     });
   }
   play() {
@@ -83,16 +100,18 @@ class App extends Component {
   }
   render() {
     return (
-      <Grid cols={8} rows={2}>
-        <GridItem style={{ height: '50vh' }}>
-          <Spectrogram streamData={this.state.streamData} isPlaying={this.state.isPlaying} />
+      <Grid cols={8} rows={3}>
+        <GridItem style={{ height: '170px' }}>
+          <Spectrogram streamData={this.state.streamData} isPlaying={this.state.isPlaying} mic={this.state.mic} />
         </GridItem>
-        <GridItem style={{ height: '50vh' }}>
+        <GridItem rowStart={2}>
           <FileList
+            mic={this.state.mic}
             selectedFile={this.state.selectedFile}
             onUploadSuccess={this.onUploadSuccess}
             handlePlayback={this.handlePlayback}
             handleSelect={this.handleSelect}
+            handleCapture={this.handleCapture}
             isPlaying={this.state.isPlaying}
             dataSource={this.state.files}
           />

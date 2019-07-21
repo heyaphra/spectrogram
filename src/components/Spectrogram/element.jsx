@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
 import { Canvas } from '../Canvas';
-// import { Spectrogram as Sonogram } from './app';
-
-
-
 class Spectrogram extends Component {
     constructor() {
         super();
@@ -19,6 +15,7 @@ class Spectrogram extends Component {
         this.draw()
     }
     setSize(width, height) {
+        console.log('resizing', width, height)
         this.canvas.width = width;
         this.canvas.height = height;
         cancelAnimationFrame(this.animationLoop);
@@ -27,7 +24,7 @@ class Spectrogram extends Component {
         this.draw();
     }
     draw(x = 0, y = 0) {
-        const { slice, ctx, canvas: { width, height }, props: { streamData, isPlaying } } = this;
+        const { slice, ctx, canvas: { width, height }, props: { streamData, isPlaying, mic } } = this;
         this.animationLoop = requestAnimationFrame(() => {
             if (x > width) x = 0;
             this.draw(x, y);
@@ -47,7 +44,7 @@ class Spectrogram extends Component {
                 sliceData[i + 2] = 0;
             }
         }
-        isPlaying ? x++ : x = 0;
+        isPlaying || mic ? x++ : x = 0;
         ctx.putImageData(slice, x, y);
     }
     scaleImageData(imageData, scale) {

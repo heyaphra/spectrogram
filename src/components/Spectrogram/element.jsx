@@ -3,15 +3,22 @@ import { Canvas } from '../Canvas';
 class Spectrogram extends Component {
     constructor() {
         super();
+        this.hiddenCanvas = document.createElement('canvas');
+        this.hiddenContext = this.hiddenCanvas.getContext('2d');
     }
     init(ctx, canvas, width, height) {
         this.ctx = ctx;
         this.canvas = canvas;
         this.canvas.width = width;
         this.canvas.height = height;
+        this.hiddenCanvas.width = width;
+        this.hiddenCanvas.height = height;
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.slice = this.ctx.getImageData(0, 0, 1, this.canvas.height);
+        this.ctx.translate(0, height)
+        this.ctx.rotate(180 * (Math.PI / 180));
+        this.ctx.scale(-1, 1);
         this.draw()
     }
     setSize(width, height) {
@@ -20,11 +27,20 @@ class Spectrogram extends Component {
         this.canvas.height = height;
         cancelAnimationFrame(this.animationLoop);
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.translate(0, height)
+        this.ctx.rotate(180 * (Math.PI / 180));
+        this.ctx.scale(-1, 1);
         this.slice = this.ctx.getImageData(0, 0, 1, this.canvas.height);
         this.draw();
     }
     draw(x = 0, y = 0) {
-        const { slice, ctx, canvas: { width, height }, props: { streamData, isPlaying, mic } } = this;
+        const {
+            slice,
+            ctx,
+            hiddenContext,
+            canvas: { width, height },
+            hiddenCanvas,
+            props: { streamData, isPlaying, mic } } = this;
         this.animationLoop = requestAnimationFrame(() => {
             if (x > width) x = 0;
             this.draw(x, y);
@@ -45,7 +61,9 @@ class Spectrogram extends Component {
             }
         }
         isPlaying || mic ? x++ : x = 0;
-        ctx.putImageData(slice, x, y);
+
+        hiddenContext.putImageData(slice, x, y);
+        ctx.drawImage(hiddenCanvas, 0, 0)
     }
     scaleImageData(imageData, scale) {
         let scaled = this.ctx.createImageData(imageData.width * scale, imageData.height * scale);
@@ -73,7 +91,7 @@ class Spectrogram extends Component {
     }
     render() {
         return (
-            <Canvas style={{ transform: 'rotate(180deg) scaleX(-1)', ...this.props.style }} canvasRef={el => { this.canvas = el }} canvasApp={this} isPlaying={this.props.isPlaying} />
+            <Canvas style={{ ...this.props.style }} canvasRef={el => { this.canvas = el }} canvasApp={this} isPlaying={this.props.isPlaying} />
         )
     }
 }

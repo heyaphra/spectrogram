@@ -84,6 +84,7 @@ class AudioStream {
     }
     getStreamData(index) {
         if (index === 'mic') {
+            this.actx.resume();
             this.microphone.analyser.getByteFrequencyData(this.microphone.dataArray)
             return this.microphone.dataArray;
         } else {

@@ -44,8 +44,13 @@ export const FileList = (props) => {
                             avatar={<img width={25} height={25} src="https://www.svgrepo.com/show/8210/musical-notes.svg" />}
                             title={
                                 <span>
-                                    <a href={file.source} target='_blank'>{file.name}</a> by {file.author.name}
-    
+                                    {
+                                        file.source ?
+                                            <span>
+                                                <a href={file.source} target='_blank'>{file.name}</a> by {file.author.name}
+                                            </span>
+                                            : file.name
+                                    }
                                 </span>
                             }
                         />

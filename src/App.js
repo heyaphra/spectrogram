@@ -38,8 +38,8 @@ let data = [
   {
     name: 'rediscovery.wav',
     author: {
-      name: 'Spectral Transmissions',
-      social: 'natalie'
+      name: 'natalie',
+      social: ''
     },
     source: 'https://youtu.be/FnzIpAAzP3w',
     path: `${process.env.PUBLIC_URL}/data/rediscovery.wav`,
@@ -153,8 +153,8 @@ class App extends Component {
             <p>Ready? Scroll down!</p>
           </div>
         </GridItem>
-        <GridItem style={{ backgroundColor: 'black' }}>
-          <Spectrogram style={{ height: '170px' }} streamData={this.state.streamData} isPlaying={this.state.isPlaying} mic={this.state.mic} />
+        <GridItem style={{ backgroundColor: 'black', position: 'relative' }}>
+          <Spectrogram style={{ position: 'absolute', bottom: 0 }} streamData={this.state.streamData} isPlaying={this.state.isPlaying} mic={this.state.mic} />
         </GridItem>
         <GridItem>
           <FileList

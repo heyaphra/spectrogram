@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8427909fbedd3baa8524978436aeb41d",
+    "revision": "f49e71ddb5459533ebda1915d18bd992",
     "url": "/spectrogram/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/spectrogram/static/js/2.6f6daa23.chunk.js"
   },
   {
-    "revision": "684e5c2aad3af450717f",
-    "url": "/spectrogram/static/js/main.70c8fe45.chunk.js"
+    "revision": "4b77335a81bdc25532db",
+    "url": "/spectrogram/static/js/main.34535794.chunk.js"
   },
   {
     "revision": "e16d0b46cf79c17c7f69",

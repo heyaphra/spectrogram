@@ -140,16 +140,11 @@ class App extends Component {
     return (
       <Grid cols={8} rows={3}>
         <GridItem style={{ width: '95vw', margin: '0 auto', marginTop: '6vh', padding: '1% 1%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '10vw', margin: '0 auto' }}>
-            <Tooltip placement='bottom' title='instagram'>
-              <Icon type='instagram' onClick={() => window.open('https://instagram.com/bloom.510')} />
-            </Tooltip>
-          </div>
           <div style={{ textAlign: 'center', marginTop: '1%' }}>
             <p> Hello, world! I'm Aphra, and this is a spectrogram. </p>
             <p>You can observe spectral content from audio files or your microphone.</p>
             <p>If you think its really pretty, you have the option to download the canvas. </p>
-            <p>Ready? Scroll down!</p>
+            <p>Ready? Scroll down! (note: there is a gap in some of the audio files - give it a moment after pressing play)</p>
           </div>
         </GridItem>
         <GridItem style={{ backgroundColor: 'black', position: 'relative' }}>

@@ -146,10 +146,9 @@ class App extends Component {
             </Tooltip>
           </div>
           <div style={{ textAlign: 'center', marginTop: '1%' }}>
-            <p> Hello, world! I'm Natalie, and this is a spectrogram. </p>
+            <p> Hello, world! I'm Aphra, and this is a spectrogram. </p>
             <p>You can observe spectral content from audio files or your microphone.</p>
             <p>If you think its really pretty, you have the option to download the canvas. </p>
-            <p>And you could also <a href='mailto:bloom510@protonmail.com' target='_blank'>say hi :-)</a></p>
             <p>Ready? Scroll down!</p>
           </div>
         </GridItem>

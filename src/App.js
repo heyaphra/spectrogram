@@ -29,7 +29,7 @@ let data = [
   {
     name: 'rhodes_motif.wav',
     author: {
-      name: 'natalie',
+      name: 'aphra',
       social: ''
     },
     source: 'https://youtu.be/FnzIpAAzP3w',
@@ -38,7 +38,7 @@ let data = [
   {
     name: 'rediscovery.wav',
     author: {
-      name: 'natalie',
+      name: 'aphra',
       social: ''
     },
     source: 'https://youtu.be/FnzIpAAzP3w',
